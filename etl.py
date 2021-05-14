@@ -13,7 +13,7 @@ sc = SparkContext(conf=conf)
 session = SparkSession(sc)
 
 # Initializes amazon ratings text files
-ratings_staging = sc.textFile('sample_data/amazon_ratings/ratings_Musical_Instruments.csv') \
+ratings_staging = sc.textFile('sample_data/amazon_ratings/ratings_*.csv') \
     .map(parse_ratings) \
     .map(convert_ts_to_date) \
     .map(cast_rating_to_int) \
@@ -72,7 +72,7 @@ product_review_dimension = session.sql('''
         max(rating) AS max_rating,
         min(review_date) AS first_review_date,
         max(review_date) AS last_review_date
-    FROM 
+    FROM
         product_review_record_fact
     GROUP BY asin
     ''')
@@ -133,8 +133,53 @@ user_review_dimension = session.sql('''
         max(rating) AS max_rating,
         min(review_date) AS first_review_date,
         max(review_date) AS last_review_date
-    FROM 
+    FROM
         product_review_record_fact
     GROUP BY user
     ''')
 
+product_review_record_fact.write \
+    .partitionBy('review_date', 'asin') \
+    .parquet(
+        'output/product_review_record_fact.parquet',
+        'overwrite',
+    )
+
+product_review_dimension.write \
+    .parquet(
+        'output/product_review_dimension.parquet',
+        'overwrite',
+    )
+
+product_dimension.write \
+    .parquet(
+        'output/product_dimension.parquet',
+        'overwrite',
+    )
+
+related_products_dimension.write \
+    .partitionBy('asin') \
+    .parquet(
+        'output/related_products_dimension.parquet',
+        'overwrite',
+    )
+
+product_sales_rank_dimension.write \
+    .partitionBy('product_category') \
+    .parquet(
+        'output/product_sales_rank_dimension.parquet',
+        'overwrite',
+    )
+
+product_categories_dimension.write \
+    .partitionBy('product_category') \
+    .parquet(
+        'output/product_categories_dimension.parquet',
+        'overwrite',
+    )
+
+user_review_dimension.write \
+    .parquet(
+        'output/user_review_dimension.parquet',
+        'overwrite',
+    )
