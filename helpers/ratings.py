@@ -9,7 +9,7 @@ KEYS = [
 ]
 
 
-def parse(line):
+def parse_ratings(line):
     line = line.split(',')
     parsed = {}
 
