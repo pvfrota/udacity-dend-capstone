@@ -20,7 +20,7 @@ def parse(line):
 
 
 def convert_ts_to_date(row):
-    row['date'] = datetime.fromtimestamp(float(row.pop('timestamp'))) \
+    row['review_date'] = datetime.fromtimestamp(float(row.pop('timestamp'))) \
         .replace(hour=0, minute=0, second=0, microsecond=0)
 
     return row

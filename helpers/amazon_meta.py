@@ -94,20 +94,3 @@ def parse(line):
                             line[i][1][1][j][k] = line[i][1][1][j][k].split(':&?!*')
 
     return __make_dictio(line)
-
-
-def apply_product_review_record_staging_schema(row):
-    return Row(
-            user=row[1]['customer'].encode('utf-8'),
-            asin=row[0].encode('utf-8'),
-            rating=int(row[1]['rating']),
-            date=datetime.strptime(row[1]['date'], '%Y-%m-%d'),
-    )
-
-
-def apply_product_dimension_schema(row):
-    return Row(
-            asin=row['asin'].encode('utf-8'),
-            group=row['group'].encode('utf-8'),
-            title=row['title'].encode('utf-8'),
-    )
