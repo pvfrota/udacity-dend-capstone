@@ -40,7 +40,7 @@ def remove_unnecessary_keys(row):
     return row
 
 
-def map_related_products(row):
+def map_product_related_product(row):
     return [row['asin'], row['related']]
 
 
@@ -52,7 +52,7 @@ def map_categories(row):
     return [row['asin'], row['categories']]
 
 
-def apply_related_products_staging_schema(row):
+def apply_product_related_product_staging_schema(row):
     return Row(
             asin=row[0][0],
             related_asin=row[1],
